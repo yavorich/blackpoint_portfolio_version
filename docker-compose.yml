@@ -101,29 +101,6 @@ services:
     networks:
       - main_network
   
-  nginx:
-    image: nginx:latest
-    ports:
-      - "80:80"
-      - "443:443"
-    restart: unless-stopped
-    volumes:
-      - ./nginx/conf/:/etc/nginx/conf.d/:ro
-      - certbot_www:/var/www/certbot/:ro
-      - certbot_conf:/etc/nginx/ssl/:ro
-      - static:/static/
-      - media:/media/
-    networks:
-      - main_network
-
-  certbot:
-    image: certbot/certbot:latest
-    volumes:
-      - certbot_www:/var/www/certbot/:rw
-      - certbot_conf:/etc/letsencrypt/:rw
-    networks:
-      - main_network
-  
 networks:
   main_network:
 volumes:
@@ -131,5 +108,3 @@ volumes:
   media:
   static:
   rabbitmq-data:
-  certbot_www:
-  certbot_conf:
