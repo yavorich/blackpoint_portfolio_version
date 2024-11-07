@@ -1,0 +1,2 @@
+docker-compose.yml merge=ours
+nginx/conf/nginx.conf merge=ours
