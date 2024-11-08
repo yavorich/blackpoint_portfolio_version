@@ -35,7 +35,10 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    "apps.account",
+    "apps.common",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -68,7 +71,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# AUTH_USER_MODEL = "account.User"
+AUTH_USER_MODEL = "account.User"
 
 ROOT_URLCONF = "config.urls"
 
