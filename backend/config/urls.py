@@ -6,7 +6,12 @@ from django.urls import path, include
 
 
 urlpatterns = [
-    path("api/v1/", include([])),
+    path("api/v1/", include(
+            [
+                path("", include("apps.support.urls")),
+            ]
+        )
+    ),
     path("admin/", admin.site.urls),
 ]
 

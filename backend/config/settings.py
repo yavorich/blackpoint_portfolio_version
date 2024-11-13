@@ -38,6 +38,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 LOCAL_APPS = [
     "apps.account",
     "apps.common",
+    "apps.support",
 ]
 
 THIRD_PARTY_APPS = [
@@ -179,7 +180,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Rest framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "core.authentication.uuid_authentication.UUIDAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
