@@ -1,12 +1,7 @@
 from django.contrib import admin
 
-from apps.account.models import User, BaseSubscription, UserSubscription
+from apps.account.models import User, UserSubscription
 from core.user_admin.mixins import ChangePasswordMixin
-
-
-@admin.register(BaseSubscription)
-class SubscriptionAdmin(admin.ModelAdmin):
-    pass
 
 
 class UserSubscriptionInline(admin.TabularInline):
