@@ -39,6 +39,7 @@ LOCAL_APPS = [
     "apps.account",
     "apps.common",
     "apps.support",
+    "apps.vending",
 ]
 
 THIRD_PARTY_APPS = [
