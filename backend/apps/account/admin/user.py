@@ -1,11 +1,23 @@
 from django.contrib import admin
 
-from apps.account.models import User
+from apps.account.models import User, BaseSubscription, UserSubscription
 from core.user_admin.mixins import ChangePasswordMixin
+
+
+@admin.register(BaseSubscription)
+class SubscriptionAdmin(admin.ModelAdmin):
+    pass
+
+
+class UserSubscriptionInline(admin.TabularInline):
+    model = UserSubscription
+    fields = ["place", "expire_date"]
+    extra = 0
 
 
 @admin.register(User)
 class UserAdmin(ChangePasswordMixin, admin.ModelAdmin):
+    inlines = [UserSubscriptionInline]
     fieldsets = (
         (
             "Авторизация",

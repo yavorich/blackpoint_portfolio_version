@@ -9,8 +9,7 @@ from django.db.models import (
     ImageField,
     PositiveBigIntegerField,
     UUIDField,
-    SET_NULL,
-    CASCADE,
+    ManyToManyField,
 )
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
@@ -90,6 +89,7 @@ class User(AbstractBaseUser):
         upload_to=get_upload_path(catalog="user", name_field="uuid", field="avatar"),
         **blank_and_null,
     )
+    subscriptions = ManyToManyField(to="vending.Place", through="UserSubscription")
 
     objects = UserManager()
 
@@ -107,3 +107,13 @@ class User(AbstractBaseUser):
 
     def __str__(self) -> str:
         return self.username or str(self.telegram_id)
+
+    @property
+    def has_active_subscriptions(self):
+        return self.subscriptions.count() > 0
+
+    @property
+    def subscribed_until(self):
+        if self.has_active_subscriptions:
+            return self.user_subscriptions.latest("expire_date").expire_date
+        return None
