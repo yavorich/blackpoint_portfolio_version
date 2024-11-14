@@ -35,7 +35,12 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # Application definition
 
-LOCAL_APPS = []
+LOCAL_APPS = [
+    "apps.account",
+    "apps.common",
+    "apps.support",
+    "apps.vending",
+]
 
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -68,7 +73,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# AUTH_USER_MODEL = "account.User"
+AUTH_USER_MODEL = "account.User"
 
 ROOT_URLCONF = "config.urls"
 
@@ -176,7 +181,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Rest framework
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "core.authentication.uuid_authentication.UUIDAuthentication",
         "rest_framework.authentication.BasicAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),

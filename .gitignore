@@ -10,7 +10,7 @@ celerybeat.pid
 
 *.pyc*
 *.sql
-*.log
+*.log*
 
 .idea/
 
