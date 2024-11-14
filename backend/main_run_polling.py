@@ -1,20 +1,16 @@
 import logging
-from asgiref.sync import sync_to_async
 
 from telegram.ext import (
     ApplicationBuilder,
     PicklePersistence,
 )
-from telegram import ChatMember, ChatMemberUpdated, Update
+from telegram import Update
 from config.settings import MAIN_TELEGRAM_BOT_TOKEN
 from telegram_bot.main.endpoints import handlers
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.WARNING
 )
-logging.getLogger("httpx").setLevel(logging.WARNING)
-
-logger = logging.getLogger(__name__)
 
 
 def main():
