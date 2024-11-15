@@ -46,10 +46,20 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "corsheaders",
     "django_celery_beat",
+    "nested_admin",
 ]
 
 INSTALLED_APPS = (
     [
+        "unfold",
+        "unfold.contrib.filters",
+        "unfold.contrib.forms",
+        "unfold.contrib.inlines",
+        "unfold.contrib.import_export",
+        "unfold.contrib.guardian",
+        "unfold.contrib.simple_history",
+        "core.unfold_singleton",
+        "core.unfold_nested",
         "django.contrib.admin",
         "django.contrib.auth",
         "django.contrib.contenttypes",
@@ -234,3 +244,33 @@ MAIN_TELEGRAM_BOT_URL = environ.get("MAIN_TELEGRAM_BOT_URL")
 MAIN_TELEGRAM_BOT = Bot(MAIN_TELEGRAM_BOT_TOKEN)
 
 MINI_APP_URL = "https://blackdot.dfa.media/?uuid={uuid}"
+
+FRONT_URL = environ.get("FRONT_URL")
+
+UNFOLD = {
+    "SITE_TITLE": "Точка чёрного",
+    "SITE_HEADER": "Администрирование",
+    "SITE_URL": FRONT_URL,
+    "SITE_SYMBOL": None,
+    "SHOW_HISTORY": False,
+    "SHOW_VIEW_ON_SITE": True,
+    # "COLORS": {
+    #     "primary": {
+    #         "50": "32 128 216",
+    #         "100": "32 128 216",
+    #         "200": "32 128 216",
+    #         "300": "32 128 216",
+    #         "400": "32 128 216",
+    #         "500": "32 128 216",
+    #         "600": "32 128 216",
+    #         "700": "32 128 216",
+    #         "800": "32 128 216",
+    #         "900": "32 128 216",
+    #         "950": "32 128 216",
+    #     },
+    # },
+}
+
+LOCALE_PATHS = [
+    BASE_DIR / "tpa_locale/" / "unfold",
+]

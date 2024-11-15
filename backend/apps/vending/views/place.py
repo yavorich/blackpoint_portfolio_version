@@ -16,12 +16,14 @@ class PlaceViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     pagination_class = PageNumberSetPagination
 
     def get_queryset(self):
-        return Place.objects.all()
+        return Place.objects.filter(is_active=True)
 
     @action(methods=["get"], detail=True)
     def tariffs(self, request, *args, **kwargs):
         place = self.get_object()
         serializer = SubscriptionTariffSerializer(
-            place.tariffs.all(), many=True, context=self.get_serializer_context()
+            place.tariffs.filter(is_active=True),
+            many=True,
+            context=self.get_serializer_context(),
         )
         return Response(serializer.data, status=200)
