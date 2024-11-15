@@ -110,7 +110,12 @@ class User(AbstractBaseUser):
 
     @property
     def has_active_subscriptions(self):
-        return self.subscriptions.count() > 0
+        return (
+            self.user_subscriptions.filter(
+                expire_date__gte=timezone.localdate()
+            ).count()
+            > 0
+        )
 
     @property
     def subscribed_until(self):
