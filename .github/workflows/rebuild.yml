@@ -24,7 +24,7 @@ jobs:
           docker image prune -f
 
       - name: Linter check (Black)
-        run: docker exec -t prclub_eggs_backend black --check --exclude '^.*\b(migrations)\b.*$' .
+        run: docker exec -t blackdot_backend black --check --exclude '^.*\b(migrations)\b.*$' .
 
       - name: Rollback if fail
         if: failure()
@@ -34,22 +34,22 @@ jobs:
           docker image prune -f
 
       - name: Collect static
-        run: docker exec -t prclub_eggs_backend python manage.py collectstatic --noinput
+        run: docker exec -t blackdot_backend python manage.py collectstatic --noinput
 
   database:
     runs-on: [ self-hosted, main-hosted ]
     needs: deploy
     steps:
       - name: Backup database
-        run: docker exec -t prclub_eggs_postgres pg_dumpall -c -U postgres > local_dump.sql
+        run: docker exec -t blackdot_postgres pg_dumpall -c -U postgres > local_dump.sql
 
       - name: Migrations
-        run: docker exec -t prclub_eggs_backend python manage.py migrate --no-input
+        run: docker exec -t blackdot_backend python manage.py migrate --no-input
 
       - name: Rollback git and DB if fail
         if: failure()
         run: |
           git reset --hard HEAD~1
           docker compose up --build --force-recreate -d
-          cat local_dump.sql | docker exec -i prclub_eggs_postgres psql postgres -U postgres
+          cat local_dump.sql | docker exec -i blackdot_postgres psql postgres -U postgres
           docker image prune -f
