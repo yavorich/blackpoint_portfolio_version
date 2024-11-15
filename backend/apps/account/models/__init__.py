@@ -1,2 +1,2 @@
 from .user import User
-from .subscription import BaseSubscription, UserSubscription, SubscriptionPayment
+from .subscription import UserSubscription, SubscriptionPayment
