@@ -20,9 +20,7 @@ class SubscriptionStatus(str, Enum):
 
 class UserSubscription(Model):
     user = ForeignKey(User, related_name="user_subscriptions", on_delete=CASCADE)
-    place = ForeignKey(
-        Place, related_name="user_subscriptions", on_delete=CASCADE
-    )
+    place = ForeignKey(Place, related_name="user_subscriptions", on_delete=CASCADE)
     tariff = ForeignKey(
         SubscriptionTariff,
         related_name="user_subscriptions",
