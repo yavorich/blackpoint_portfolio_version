@@ -29,7 +29,9 @@ class SubscriptionPaymentSerializer(ModelSerializer):
     def validate(self, attrs):
         if attrs["tariff"] not in attrs["place"].tariffs.all():
             raise ValidationError("Выбранный тариф недоступен для выбранной точки")
+        return attrs
 
     def create(self, validated_data):
         validated_data["user"] = self.context.get("request").user
+        validated_data["price"] = validated_data["tariff"].price
         return super().create(validated_data)

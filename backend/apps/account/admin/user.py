@@ -1,17 +1,61 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
+from core.unfold_nested.admin import (
+    UnfoldNestedAdmin,
+    UnfoldNestedTabularInline,
+    UnfoldNestedStackedInline,
+)
 
-from apps.account.models import User, UserSubscription
-from core.user_admin.mixins import ChangePasswordMixin
+from apps.account.models import User, UserSubscription, SubscriptionPayment
+from core.unfold_user_admin.mixins import ChangePasswordMixin
+from core.unfold.admin import UnfoldModelAdmin
+from core.unfold.filters import AllValuesFieldListDropdownFilter
 
 
-class UserSubscriptionInline(admin.TabularInline):
-    model = UserSubscription
-    fields = ["place", "expire_date"]
+@admin.register(SubscriptionPayment)
+class SubscriptionPaymentAdmin(UnfoldModelAdmin):
+    list_display = ["payment_date", "price", "user", "tariff", "place"]
+    list_filter = (
+        ("user__username", AllValuesFieldListDropdownFilter),
+        ("tariff__name", AllValuesFieldListDropdownFilter),
+        ("place__address", AllValuesFieldListDropdownFilter),
+    )
+    date_hierarchy = "payment_date"
+
+
+class SubscriptionPaymentInline(UnfoldNestedTabularInline):
+    model = SubscriptionPayment
+    fields = ["payment_date", "price"]
     extra = 0
 
 
+class UserSubscriptionInline(UnfoldNestedStackedInline):
+    model = UserSubscription
+    inlines = [SubscriptionPaymentInline]
+    fields = [
+        "tariff_name",
+        "start_date",
+        "expire_date",
+        "place_address",
+    ]
+    readonly_fields = fields
+    extra = 0
+
+    @admin.display(description="Название")
+    def tariff_name(self, obj):
+        return obj.tariff.name
+
+    @admin.display(description="Адрес автомата")
+    def place_address(self, obj):
+        return obj.place.address
+
+    @admin.display(description="Стоимость")
+    def tariff_price(self, obj):
+        return obj.tariff.price
+
+
 @admin.register(User)
-class UserAdmin(ChangePasswordMixin, admin.ModelAdmin):
+class UserAdmin(ChangePasswordMixin, UnfoldNestedAdmin):
     inlines = [UserSubscriptionInline]
     fieldsets = (
         (
@@ -75,8 +119,8 @@ class UserAdmin(ChangePasswordMixin, admin.ModelAdmin):
     )
     list_display_links = ("id", "username")
     list_filter = (
-        "is_active",
-        "is_staff",
+        ("is_active", AllValuesFieldListDropdownFilter),
+        ("is_staff", AllValuesFieldListDropdownFilter),
     )
     search_fields = (
         "username",
@@ -84,3 +128,6 @@ class UserAdmin(ChangePasswordMixin, admin.ModelAdmin):
     )
     filter_horizontal = ()
     ordering = ("-date_joined",)
+
+
+admin.site.unregister(Group)
