@@ -2,6 +2,7 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
     ListModelMixin,
     RetrieveModelMixin,
+    CreateModelMixin,
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -18,6 +19,7 @@ from core.pagination import PageNumberSetPagination
 class UserSubscriptionViewSet(
     ListModelMixin,
     RetrieveModelMixin,
+    CreateModelMixin,
     GenericViewSet,
 ):
     permission_classes = [IsAuthenticated]
