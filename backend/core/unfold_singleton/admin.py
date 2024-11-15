@@ -74,9 +74,9 @@ class UnfoldSingletonModelAdmin(ModelAdmin):
 
         if not extra_context:
             extra_context = {}
-        extra_context[
-            "skip_object_list_page"
-        ] = solo_settings.SOLO_ADMIN_SKIP_OBJECT_LIST_PAGE
+        extra_context["skip_object_list_page"] = (
+            solo_settings.SOLO_ADMIN_SKIP_OBJECT_LIST_PAGE
+        )
 
         return super().change_view(
             request,
@@ -93,9 +93,9 @@ class UnfoldSingletonModelAdmin(ModelAdmin):
     ) -> HttpResponse:
         if not extra_context:
             extra_context = {}
-        extra_context[
-            "skip_object_list_page"
-        ] = solo_settings.SOLO_ADMIN_SKIP_OBJECT_LIST_PAGE
+        extra_context["skip_object_list_page"] = (
+            solo_settings.SOLO_ADMIN_SKIP_OBJECT_LIST_PAGE
+        )
 
         return super().history_view(
             request,
