@@ -25,7 +25,7 @@ class PlaceModelForm(ModelForm):
 
     class Meta:
         model = Place
-        fields = ["name", "city", "address", "drinks", "is_active"]
+        fields = ["name", "partner", "city", "address", "drinks", "is_active"]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
