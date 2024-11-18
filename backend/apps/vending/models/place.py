@@ -23,12 +23,12 @@ class Place(Model):
         on_delete=SET_NULL,
     )
     address = CharField("Адрес автомата", max_length=255)
-    tariffs = ManyToManyField(
-        SubscriptionTariff,
-        related_name="places",
-        verbose_name="Доступные тарифы",
-        blank=True,
-    )
+    # tariffs = ManyToManyField(
+    #     SubscriptionTariff,
+    #     related_name="places",
+    #     verbose_name="Доступные тарифы",
+    #     blank=True,
+    # )
     # point = PointField("Координаты", geography=True, srid=4326)
 
     def __str__(self):
