@@ -14,13 +14,30 @@ from core.unfold.filters import AllValuesFieldListDropdownFilter
 
 @admin.register(SubscriptionPayment)
 class SubscriptionPaymentAdmin(UnfoldModelAdmin):
-    list_display = ["payment_date", "price", "user", "tariff", "place"]
+    list_display = [
+        "payment_date",
+        "price",
+        "user",
+        "tariff",
+        "address",
+        "partner_name",
+    ]
     list_filter = (
         ("user__username", AllValuesFieldListDropdownFilter),
         ("tariff__name", AllValuesFieldListDropdownFilter),
         ("place__address", AllValuesFieldListDropdownFilter),
+        ("place__partner__name", AllValuesFieldListDropdownFilter),
     )
     date_hierarchy = "payment_date"
+
+    @admin.display(description="Адрес автомата")
+    def address(self, obj: SubscriptionPayment):
+        return obj.place.address if obj.place else None
+
+    @admin.display(description="Наименование партнёра автомата")
+    def partner_name(self, obj: SubscriptionPayment):
+        partner = obj.place.partner if obj.place else None
+        return partner.name if partner else None
 
 
 class SubscriptionPaymentInline(UnfoldNestedTabularInline):
