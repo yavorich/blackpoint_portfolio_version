@@ -7,8 +7,11 @@ from django.db.models import (
     SET_NULL,
 )
 
+from core.builted.blank_and_null import blank_and_null
+
 from .tariff import SubscriptionTariff
 from .city import City
+from .partner import Partner
 
 
 class Place(Model):
@@ -23,6 +26,13 @@ class Place(Model):
         on_delete=SET_NULL,
     )
     address = CharField("Адрес автомата", max_length=255)
+    partner = ForeignKey(
+        Partner,
+        related_name="places",
+        verbose_name="Партнёр",
+        on_delete=SET_NULL,
+        **blank_and_null
+    )
     # tariffs = ManyToManyField(
     #     SubscriptionTariff,
     #     related_name="places",
