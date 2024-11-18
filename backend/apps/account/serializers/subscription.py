@@ -1,5 +1,4 @@
 from rest_framework.serializers import ModelSerializer
-from rest_framework.exceptions import ValidationError
 from apps.account.models import (
     UserSubscription,
     SubscriptionPayment,
@@ -27,8 +26,8 @@ class SubscriptionPaymentSerializer(ModelSerializer):
         fields = ["place", "tariff"]
 
     def validate(self, attrs):
-        if attrs["tariff"] not in attrs["place"].tariffs.all():
-            raise ValidationError("Выбранный тариф недоступен для выбранной точки")
+        # if attrs["tariff"] not in attrs["place"].tariffs.all():
+        #     raise ValidationError("Выбранный тариф недоступен для выбранной точки")
         return attrs
 
     def create(self, validated_data):

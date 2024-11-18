@@ -3,7 +3,7 @@ from django.forms import ModelForm, ModelMultipleChoiceField, CheckboxSelectMult
 from core.unfold.admin import UnfoldModelAdmin
 from core.unfold.filters import AllValuesFieldListDropdownFilter
 
-from apps.vending.models import City, Place, SubscriptionTariff
+from apps.vending.models import City, Place, SubscriptionTariff, Partner
 
 
 @admin.register(City)
@@ -31,9 +31,12 @@ class PlaceModelForm(ModelForm):
 
 @admin.register(Place)
 class PlaceAdmin(UnfoldModelAdmin):
-    form = PlaceModelForm
-    list_display = ["name", "city", "address", "is_active"]
-    list_filter = (("city__name", AllValuesFieldListDropdownFilter),)
+    # form = PlaceModelForm
+    list_display = ["name", "partner", "city", "address", "is_active"]
+    list_filter = (
+        ("city__name", AllValuesFieldListDropdownFilter),
+        ("partner__name", AllValuesFieldListDropdownFilter),
+    )
 
 
 @admin.register(SubscriptionTariff)
@@ -42,3 +45,8 @@ class SubscriptionTariffAdmin(UnfoldModelAdmin):
 
     def has_delete_permission(self, request, obj=...):
         return False
+
+
+@admin.register(Partner)
+class PartnerAdmin(UnfoldModelAdmin):
+    list_display = ["name"]
