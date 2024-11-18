@@ -9,9 +9,9 @@ from django.db.models import (
 
 from core.builted.blank_and_null import blank_and_null
 
-from .tariff import SubscriptionTariff
 from .city import City
 from .partner import Partner
+from .drink import DrinkVolume
 
 
 class Place(Model):
@@ -32,6 +32,9 @@ class Place(Model):
         verbose_name="Партнёр",
         on_delete=SET_NULL,
         **blank_and_null
+    )
+    drinks = ManyToManyField(
+        DrinkVolume, related_name="places", verbose_name="Меню", null=True
     )
     # tariffs = ManyToManyField(
     #     SubscriptionTariff,
