@@ -31,7 +31,7 @@ class PlaceModelForm(ModelForm):
 
 @admin.register(Place)
 class PlaceAdmin(UnfoldModelAdmin):
-    form = PlaceModelForm
+    # form = PlaceModelForm
     list_display = ["name", "city", "address", "is_active"]
     list_filter = (("city__name", AllValuesFieldListDropdownFilter),)
 
