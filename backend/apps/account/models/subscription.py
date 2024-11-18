@@ -6,7 +6,6 @@ from django.db.models import (
     ForeignKey,
     Model,
     PositiveIntegerField,
-    BooleanField,
 )
 from django.utils.timezone import localdate
 
