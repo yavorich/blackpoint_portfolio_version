@@ -5,6 +5,7 @@ from apps.account.views import (
     UserProfileAPIView,
     UserSubscriptionViewSet,
     # SubscriptionTariffView,
+    DocumentAPIView,
 )
 
 
@@ -16,4 +17,5 @@ router.register(
 urlpatterns = [
     path("profile/", UserProfileAPIView.as_view(), name="profile"),
     # path("tariffs/", SubscriptionTariffView.as_view(), name="subscription-tariffs"),
+    path("document/<str:type>/", DocumentAPIView.as_view(), name="document"),
 ] + router.urls
