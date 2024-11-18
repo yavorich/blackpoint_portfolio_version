@@ -7,6 +7,7 @@ from core.unfold_nested.admin import (
 )
 
 from apps.account.models import User, UserSubscription, SubscriptionPayment
+from apps.vending.models import DrinkHistory
 from core.unfold_user_admin.mixins import ChangePasswordMixin
 from core.unfold.admin import UnfoldModelAdmin
 from core.unfold.filters import AllValuesFieldListDropdownFilter
@@ -43,6 +44,7 @@ class SubscriptionPaymentAdmin(UnfoldModelAdmin):
 class SubscriptionPaymentInline(UnfoldNestedTabularInline):
     model = SubscriptionPayment
     fields = ["payment_date", "price"]
+    readonly_fields = fields
     extra = 0
 
 
@@ -71,9 +73,16 @@ class UserSubscriptionInline(UnfoldNestedStackedInline):
         return obj.tariff.price
 
 
+class UserDrinkHistoryInline(UnfoldNestedStackedInline):
+    model = DrinkHistory
+    fields = ["place", "drink", "purchased_at"]
+    readonly_fields = fields
+    extra = 0
+
+
 @admin.register(User)
 class UserAdmin(ChangePasswordMixin, UnfoldNestedAdmin):
-    inlines = [UserSubscriptionInline]
+    inlines = [UserSubscriptionInline, UserDrinkHistoryInline]
     fieldsets = (
         (
             "Авторизация",
