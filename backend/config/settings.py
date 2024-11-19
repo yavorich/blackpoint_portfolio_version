@@ -274,3 +274,6 @@ UNFOLD = {
 LOCALE_PATHS = [
     BASE_DIR / "tpa_locale/" / "unfold",
 ]
+
+PAYKEEPER_USER = environ.get("PAYKEEPER_USER")
+PAYKEEPER_PASSWORD = environ.get("PAYKEEPER_PASSWORD")

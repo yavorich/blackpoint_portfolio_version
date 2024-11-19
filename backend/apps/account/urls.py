@@ -6,6 +6,7 @@ from apps.account.views import (
     UserSubscriptionViewSet,
     # SubscriptionTariffView,
     DocumentAPIView,
+    PaymentSuccessWebhookView,
 )
 
 
@@ -18,4 +19,7 @@ urlpatterns = [
     path("profile/", UserProfileAPIView.as_view(), name="profile"),
     # path("tariffs/", SubscriptionTariffView.as_view(), name="subscription-tariffs"),
     path("document/<str:type>/", DocumentAPIView.as_view(), name="document"),
+    path(
+        "payment/success/", PaymentSuccessWebhookView.as_view(), name="payment-success"
+    ),
 ] + router.urls
