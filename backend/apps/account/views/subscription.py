@@ -2,16 +2,15 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
     ListModelMixin,
     RetrieveModelMixin,
-    CreateModelMixin,
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from apps.account.serializers import (
     UserSubscriptionSerializer,
-    SubscriptionPaymentSerializer,
+    BuySubscriptionSerializer,
 )
-from apps.account.tasks import apply_user_subscription_payment
+from apps.account.services.payment_manager import PaymentManager
 
 from core.pagination import PageNumberSetPagination
 
@@ -19,7 +18,6 @@ from core.pagination import PageNumberSetPagination
 class UserSubscriptionViewSet(
     ListModelMixin,
     RetrieveModelMixin,
-    CreateModelMixin,
     GenericViewSet,
 ):
     permission_classes = [IsAuthenticated]
@@ -30,17 +28,19 @@ class UserSubscriptionViewSet(
 
     def get_serializer_class(self):
         if self.action == "create":
-            return SubscriptionPaymentSerializer
+            return BuySubscriptionSerializer
         return UserSubscriptionSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        payment = serializer.save()
+        place = serializer.validated_data["place"]
+        tariff = serializer.validated_data["tariff"]
 
-        # TODO: логика оплаты
-        apply_user_subscription_payment.apply_async(args=[payment.id], countdown=3)
-        return Response(status=201)
+        payment_data = PaymentManager().buy(
+            place=place, tariff=tariff, user=request.user
+        )
+        return Response(payment_data, status=201)
 
 
 # class SubscriptionTariffView(ListAPIView):

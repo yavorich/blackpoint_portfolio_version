@@ -6,6 +6,8 @@ from django.db.models import (
     ForeignKey,
     Model,
     PositiveIntegerField,
+    CharField,
+    URLField,
 )
 from django.utils.timezone import localdate
 
@@ -89,6 +91,8 @@ class SubscriptionPayment(Model):
         on_delete=SET_NULL,
     )
     price = PositiveIntegerField(verbose_name="Стоимость")
+    payment_url = URLField("URL для оплаты", blank=True, null=True)
+    invoice_id = CharField("ID счёта", max_length=17, blank=True, null=True)
     payment_date = DateField("Дата платежа", blank=True, null=True)
 
     class Meta:

@@ -1,9 +1,7 @@
-from rest_framework.serializers import ModelSerializer
-from apps.account.models import (
-    UserSubscription,
-    SubscriptionPayment,
-)
-from apps.vending.models import Place
+from rest_framework.serializers import ModelSerializer, Serializer, IntegerField
+from rest_framework.exceptions import ValidationError
+from apps.account.models import UserSubscription
+from apps.vending.models import Place, SubscriptionTariff
 
 
 class UserSubscriptionPlaceSerializer(ModelSerializer):
@@ -20,17 +18,19 @@ class UserSubscriptionSerializer(ModelSerializer):
         fields = ["id", "place", "status", "expire_date", "today_cups"]
 
 
-class SubscriptionPaymentSerializer(ModelSerializer):
-    class Meta:
-        model = SubscriptionPayment
-        fields = ["place", "tariff"]
+class BuySubscriptionSerializer(Serializer):
+    place_id = IntegerField()
+    tariff_id = IntegerField()
 
     def validate(self, attrs):
-        # if attrs["tariff"] not in attrs["place"].tariffs.all():
-        #     raise ValidationError("Выбранный тариф недоступен для выбранной точки")
+        try:
+            attrs["place"] = Place.objects.get(id=attrs["place_id"])
+            attrs["tariff"] = SubscriptionTariff.objects.get(id=attrs["tariff_id"])
+        except [Place.DoesNotExist, SubscriptionTariff.DoesNotExist]:
+            raise ValidationError("Автомат или тариф не найден")
         return attrs
 
-    def create(self, validated_data):
-        validated_data["user"] = self.context.get("request").user
-        validated_data["price"] = validated_data["tariff"].price
-        return super().create(validated_data)
+    # def create(self, validated_data):
+    #     validated_data["user"] = self.context.get("request").user
+    #     validated_data["price"] = validated_data["tariff"].price
+    #     return super().create(validated_data)
