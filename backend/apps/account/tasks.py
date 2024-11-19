@@ -9,8 +9,8 @@ from apps.account.models import (
 
 
 @shared_task
-def apply_user_subscription_payment(payment_id):
-    payment = SubscriptionPayment.objects.filter(id=payment_id).first()
+def confirm_user_subscription_payment(payment_uuid):
+    payment = SubscriptionPayment.objects.filter(uuid=payment_uuid).first()
     if not payment:
         return "Платёж не найден"
 
@@ -37,7 +37,6 @@ def apply_user_subscription_payment(payment_id):
                 expire_date=start_date + timedelta(days=payment.tariff.days),
                 today_cups=payment.tariff.cups,
             )
-        payment.payment_date = localdate()
         payment.subscription = subscription
         payment.save()
 

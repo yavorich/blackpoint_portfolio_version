@@ -16,6 +16,7 @@ from core.unfold.filters import AllValuesFieldListDropdownFilter
 @admin.register(SubscriptionPayment)
 class SubscriptionPaymentAdmin(UnfoldModelAdmin):
     list_display = [
+        "uuid",
         "payment_date",
         "price",
         "user",
