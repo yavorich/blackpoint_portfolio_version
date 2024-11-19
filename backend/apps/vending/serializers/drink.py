@@ -1,4 +1,5 @@
 from rest_framework.serializers import ModelSerializer
+from rest_framework.exceptions import ValidationError
 from apps.vending.models import DrinkType, DrinkVolume, DrinkHistory
 
 
@@ -19,6 +20,14 @@ class DrinkBuySerializer(ModelSerializer):
     class Meta:
         model = DrinkHistory
         fields = ["drink"]
+
+    def validate(self, attrs):
+        place = self.context.get("place")
+        if not attrs["drink"] in place.drinks.all():
+            raise ValidationError(
+                "Данная позиция не входит в меню автомата. Выберите другую позицию"
+            )
+        return attrs
 
     def create(self, validated_data):
         validated_data["user"] = self.context.get("request").user
