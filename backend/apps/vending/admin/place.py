@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.forms import ModelForm, ModelMultipleChoiceField, CheckboxSelectMultiple
+from django.utils.safestring import mark_safe
 from unfold.admin import StackedInline
 
 from core.unfold.admin import UnfoldModelAdmin
@@ -38,8 +39,24 @@ class PlaceModelForm(ModelForm):
 class PlaceAdmin(UnfoldModelAdmin):
     form = PlaceModelForm
     list_display = ["name", "partner", "city", "address", "is_active"]
+    fields = (
+        "name",
+        "partner",
+        "city",
+        "address",
+        "drinks",
+        "qr_code_image",
+        "is_active",
+    )
+    readonly_fields = ("qr_code_image",)
     list_filter = (
         ("city__name", AllValuesFieldListDropdownFilter),
         ("partner__name", AllValuesFieldListDropdownFilter),
     )
     inlines = [PlaceDrinkHistoryInline]
+
+    @admin.display(description="QR-код")
+    def qr_code_image(self, obj: Place):
+        if obj.qr_code:
+            return mark_safe(f'<img src="{obj.qr_code.url}" width="30%" />')
+        return "QR-код не создан"
