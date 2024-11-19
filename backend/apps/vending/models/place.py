@@ -1,3 +1,4 @@
+from django.core.files import File
 from django.db.models import (
     Model,
     CharField,
@@ -5,9 +6,14 @@ from django.db.models import (
     BooleanField,
     ForeignKey,
     SET_NULL,
+    ImageField,
 )
+from io import BytesIO
+from qrcode import QRCode
+from qrcode.constants import ERROR_CORRECT_L
 
 from core.builted.blank_and_null import blank_and_null
+from core.utils.get_upload_path import get_upload_path
 
 from .city import City
 from .partner import Partner
@@ -31,23 +37,40 @@ class Place(Model):
         related_name="places",
         verbose_name="Партнёр",
         on_delete=SET_NULL,
-        **blank_and_null
+        **blank_and_null,
     )
     drinks = ManyToManyField(
-        DrinkVolume, related_name="places", verbose_name="Меню", null=True
+        DrinkVolume, related_name="places", verbose_name="Меню", blank=True
     )
-    # tariffs = ManyToManyField(
-    #     SubscriptionTariff,
-    #     related_name="places",
-    #     verbose_name="Доступные тарифы",
-    #     blank=True,
-    # )
+    qr_code = ImageField(
+        upload_to=get_upload_path(catalog="places", name_field="pk", field="qr_code"),
+        blank=True,
+        null=True,
+    )
     # point = PointField("Координаты", geography=True, srid=4326)
-
-    def __str__(self):
-        return self.address
 
     class Meta:
         verbose_name = "автомат"
         verbose_name_plural = "Автоматы"
         ordering = ["address"]
+
+    def __str__(self):
+        return self.address
+
+    def generate_qr_code(self):
+        # Содержимое QR-кода — только ID места
+        qr_data = str(self.id)
+        qr = QRCode(
+            version=1,
+            error_correction=ERROR_CORRECT_L,
+            box_size=10,
+            border=4,
+        )
+        qr.add_data(qr_data)
+        qr.make(fit=True)
+
+        # Сохраняем QR-код в изображение
+        img = qr.make_image(fill_color="black", back_color="white")
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        self.qr_code.save(f"place_{self.id}.png", File(buffer), save=False)
