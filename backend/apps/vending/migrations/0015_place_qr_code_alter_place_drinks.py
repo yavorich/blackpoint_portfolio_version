@@ -7,9 +7,7 @@ def generate_qr_codes(apps, schema_editor):
     # Получаем модель через apps.get_model
     Place = apps.get_model("vending", "Place")
     for place in Place.objects.all():
-        if not place.qr_code:
-            place.generate_qr_code()
-            place.save()
+        place.save()  # вызов сигнала для генерации qr-кода
 
 
 class Migration(migrations.Migration):
