@@ -11,7 +11,8 @@ class PaymentManager(metaclass=SingletonMeta):
             user=user,
             place=place,
             tariff=tariff,
-            price=1,  # tariff.price
+            price=tariff.price,
+            status=SubscriptionPayment.Status.PENDING,
         )
         payment_data = self.payment_api.init_payment(payment)
         for attr, value in payment_data.items():

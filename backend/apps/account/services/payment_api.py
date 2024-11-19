@@ -25,7 +25,7 @@ class PaykeeperPaymentApi(metaclass=SingletonMeta):
         payment_data = {
             "pay_amount": payment.price,
             "clientid": payment.user.username,
-            "orderid": f"Заказ № {payment.id}",
+            "orderid": payment.uuid,
             "service_name": "Услуга",
         }
 
@@ -61,4 +61,4 @@ class PaykeeperPaymentApi(metaclass=SingletonMeta):
 
         # Прямая ссылка на оплату
         payment_url = f"{self._server_url}/bill/{invoice_id}/"
-        return {"invoice_id": invoice_id, "payment_url": payment_url}
+        return {"payment_url": payment_url}
