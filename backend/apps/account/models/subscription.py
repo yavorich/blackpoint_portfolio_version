@@ -1,4 +1,5 @@
 from enum import Enum
+from uuid import uuid4
 from django.db.models import (
     CASCADE,
     SET_NULL,
@@ -6,8 +7,10 @@ from django.db.models import (
     ForeignKey,
     Model,
     PositiveIntegerField,
-    CharField,
     URLField,
+    UUIDField,
+    TextChoices,
+    CharField,
 )
 from django.utils.timezone import localdate
 
@@ -62,6 +65,12 @@ class UserSubscription(Model):
 
 
 class SubscriptionPayment(Model):
+    class Status(TextChoices):
+        PENDING = "pending", "Ожидание"
+        SUCCESS = "success", "Успешно"
+        FAILED = "failed", "Неудачно"
+
+    uuid = UUIDField("UUID платежа", default=uuid4, unique=True, editable=False)
     subscription = ForeignKey(
         UserSubscription,
         related_name="payments",
@@ -92,8 +101,8 @@ class SubscriptionPayment(Model):
     )
     price = PositiveIntegerField(verbose_name="Стоимость")
     payment_url = URLField("URL для оплаты", blank=True, null=True)
-    invoice_id = CharField("ID счёта", max_length=17, blank=True, null=True)
     payment_date = DateField("Дата платежа", blank=True, null=True)
+    status = CharField("Статус", choices=Status.choices)
 
     class Meta:
         verbose_name = "платёж"
