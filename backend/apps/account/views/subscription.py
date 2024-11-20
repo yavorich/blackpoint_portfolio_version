@@ -34,12 +34,14 @@ class UserSubscriptionViewSet(
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        place = serializer.validated_data["place"]
-        tariff = serializer.validated_data["tariff"]
+        validated_data = serializer.validated_data
 
-        payment_data = PaymentManager().buy(
-            place=place, tariff=tariff, user=request.user
-        )
+        user = request.user
+        user.email = validated_data["email"]
+        user.phone = validated_data["phone"]
+        user.save()
+
+        payment_data = PaymentManager().buy(validated_data, user=user)
         return Response(payment_data, status=201)
 
 
