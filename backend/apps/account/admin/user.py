@@ -102,6 +102,8 @@ class UserAdmin(ChangePasswordMixin, UnfoldNestedAdmin):
                     "first_name",
                     "last_name",
                     "avatar",
+                    "email",
+                    "phone",
                 )
             },
         ),

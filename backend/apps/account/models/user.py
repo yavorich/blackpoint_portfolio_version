@@ -10,9 +10,11 @@ from django.db.models import (
     PositiveBigIntegerField,
     UUIDField,
     ManyToManyField,
+    EmailField,
 )
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from phonenumber_field.modelfields import PhoneNumberField
 
 from core.builted.blank_and_null import blank_and_null
 from core.telegram.managers.user import GetByTelegramMixin
@@ -89,6 +91,8 @@ class User(AbstractBaseUser):
         upload_to=get_upload_path(catalog="user", name_field="uuid", field="avatar"),
         **blank_and_null,
     )
+    email = EmailField("Email", **blank_and_null)
+    phone = PhoneNumberField("Номер телефона", **blank_and_null)
     subscriptions = ManyToManyField(to="vending.Place", through="UserSubscription")
 
     objects = UserManager()

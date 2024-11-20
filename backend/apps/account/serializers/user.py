@@ -11,6 +11,8 @@ class UserProfileSerializer(ModelSerializer):
             "first_name",
             "last_name",
             "avatar",
+            "email",
+            "phone",
             "has_active_subscriptions",
             "subscribed_until",
         ]

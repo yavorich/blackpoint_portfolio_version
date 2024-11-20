@@ -11,8 +11,10 @@ from django.db.models import (
     UUIDField,
     TextChoices,
     CharField,
+    EmailField,
 )
 from django.utils.timezone import localdate
+from phonenumber_field.modelfields import PhoneNumberField
 
 from apps.vending.models import SubscriptionTariff, Place
 
@@ -85,6 +87,8 @@ class SubscriptionPayment(Model):
         null=True,
         on_delete=SET_NULL,
     )
+    email = EmailField("Email", blank=True, null=True)
+    phone = PhoneNumberField("Номер телефона", blank=True, null=True)
     place = ForeignKey(
         "vending.Place",
         related_name="payments",

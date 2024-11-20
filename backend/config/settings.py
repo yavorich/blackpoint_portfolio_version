@@ -47,6 +47,7 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "django_celery_beat",
     "nested_admin",
+    "phonenumber_field",
 ]
 
 INSTALLED_APPS = (

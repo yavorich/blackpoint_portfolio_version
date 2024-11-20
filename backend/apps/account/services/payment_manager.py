@@ -6,13 +6,12 @@ from apps.account.models import SubscriptionPayment
 class PaymentManager(metaclass=SingletonMeta):
     payment_api = PaykeeperPaymentApi()
 
-    def buy(self, place, tariff, user):
+    def buy(self, data, user):
         payment = SubscriptionPayment.objects.create(
             user=user,
-            place=place,
-            tariff=tariff,
-            price=tariff.price,
+            price=data["tariff"].price,
             status=SubscriptionPayment.Status.PENDING,
+            **data,
         )
         payment_data = self.payment_api.init_payment(payment)
         for attr, value in payment_data.items():
