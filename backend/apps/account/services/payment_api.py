@@ -26,6 +26,8 @@ class PaykeeperPaymentApi(metaclass=SingletonMeta):
             "pay_amount": payment.price,
             "clientid": payment.user.username,
             "orderid": payment.uuid,
+            "client_email": payment.email,
+            "client_phone": str(payment.phone),
             "service_name": "Услуга",
         }
 
