@@ -54,5 +54,8 @@ def expire_subscription_payment(payment_uuid):
     if not payment:
         return "Платёж не найден"
 
+    if payment.status != SubscriptionPayment.Status.PENDING:
+        return "Платёж не в статусе ожидания"
+
     payment.status = SubscriptionPayment.Status.EXPIRED
     payment.save()
