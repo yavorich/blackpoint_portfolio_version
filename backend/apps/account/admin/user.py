@@ -17,9 +17,11 @@ from core.unfold.filters import AllValuesFieldListDropdownFilter
 class SubscriptionPaymentAdmin(UnfoldModelAdmin):
     list_display = [
         "uuid",
+        "status",
         "payment_date",
         "price",
         "user",
+        "email",
         "tariff",
         "address",
         "partner_name",
