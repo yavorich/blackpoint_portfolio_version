@@ -278,3 +278,4 @@ LOCALE_PATHS = [
 
 PAYKEEPER_USER = environ.get("PAYKEEPER_USER")
 PAYKEEPER_PASSWORD = environ.get("PAYKEEPER_PASSWORD")
+PAYMENT_TEST_MODE = environ.get("PAYMENT_TEST_MODE", "1").lower() in ("true", "1")
