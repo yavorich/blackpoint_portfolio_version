@@ -12,6 +12,7 @@ from django.db.models import (
     TextChoices,
     CharField,
     EmailField,
+    DateTimeField,
 )
 from django.utils.timezone import localdate
 from phonenumber_field.modelfields import PhoneNumberField
@@ -70,7 +71,7 @@ class SubscriptionPayment(Model):
     class Status(TextChoices):
         PENDING = "pending", "Ожидание"
         SUCCESS = "success", "Успешно"
-        FAILED = "failed", "Неудачно"
+        EXPIRED = "expired", "Просрочен"
 
     uuid = UUIDField("UUID платежа", default=uuid4, unique=True, editable=False)
     subscription = ForeignKey(
@@ -104,6 +105,8 @@ class SubscriptionPayment(Model):
         on_delete=SET_NULL,
     )
     price = PositiveIntegerField(verbose_name="Стоимость")
+    invoice_id = CharField("Номер счёта", blank=True, null=True)
+    expiry_datetime = DateTimeField("Оплатить до", blank=True, null=True)
     payment_url = URLField("URL для оплаты", blank=True, null=True)
     payment_date = DateField("Дата платежа", blank=True, null=True)
     status = CharField("Статус", choices=Status.choices)
