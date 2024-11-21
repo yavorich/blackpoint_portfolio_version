@@ -46,3 +46,13 @@ def reset_today_cups():
     for subscription in UserSubscription.objects.filter(expire_date__gte=localdate()):
         subscription.today_cups = subscription.tariff.cups
         subscription.save()
+
+
+@shared_task
+def expire_subscription_payment(payment_uuid):
+    payment = SubscriptionPayment.objects.filter(uuid=payment_uuid).first()
+    if not payment:
+        return "Платёж не найден"
+
+    payment.status = SubscriptionPayment.Status.EXPIRED
+    payment.save()
