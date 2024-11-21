@@ -1,7 +1,12 @@
+from django.utils.timezone import localtime
+from config.settings import PAYMENT_TEST_MODE
 from core.singleton import SingletonMeta
 from apps.account.services.payment_api import PaykeeperPaymentApi
 from apps.account.models import SubscriptionPayment
-from apps.account.tasks import expire_subscription_payment
+from apps.account.tasks import (
+    expire_subscription_payment,
+    confirm_user_subscription_payment,
+)
 
 
 class PaymentManager(metaclass=SingletonMeta):
@@ -20,7 +25,17 @@ class PaymentManager(metaclass=SingletonMeta):
 
         payment.save()
 
-        expire_subscription_payment.apply_async(
-            args=[payment.uuid], eta=payment_data["expiry_datetime"]
-        )
+        if PAYMENT_TEST_MODE:
+            payment.status = SubscriptionPayment.Status.SUCCESS
+            payment.payment_date = localtime()
+            payment.save()
+
+            confirm_user_subscription_payment.apply_async(
+                args=[payment.uuid], countdown=3
+            )
+
+        else:
+            expire_subscription_payment.apply_async(
+                args=[payment.uuid], eta=payment_data["expiry_datetime"]
+            )
         return payment_data
