@@ -31,6 +31,7 @@ class SubscriptionPaymentAdmin(UnfoldModelAdmin):
         ("tariff__name", AllValuesFieldListDropdownFilter),
         ("place__address", AllValuesFieldListDropdownFilter),
         ("place__partner__name", AllValuesFieldListDropdownFilter),
+        ("status", AllValuesFieldListDropdownFilter),
     )
     date_hierarchy = "payment_date"
 
