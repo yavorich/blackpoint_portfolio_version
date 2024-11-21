@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from apps.account.serializers import (
     UserSubscriptionSerializer,
     BuySubscriptionSerializer,
+    PaymentResponseSerializer,
 )
 from apps.account.services.payment_manager import PaymentManager
 
@@ -42,7 +43,8 @@ class UserSubscriptionViewSet(
         user.save()
 
         payment_data = PaymentManager().buy(validated_data, user=user)
-        return Response(payment_data, status=201)
+        response_serializer = PaymentResponseSerializer(payment_data)
+        return Response(response_serializer.data, status=201)
 
 
 # class SubscriptionTariffView(ListAPIView):
