@@ -1,6 +1,7 @@
 import base64
 import requests
 
+from django.utils.timezone import localtime, timedelta
 from config.settings import PAYKEEPER_USER, PAYKEEPER_PASSWORD
 from core.singleton import SingletonMeta
 
@@ -20,6 +21,9 @@ class PaykeeperPaymentApi(metaclass=SingletonMeta):
             "Authorization": f"Basic {base64_auth}",
         }
 
+        # 15 минут на оплату
+        expiry_datetime = localtime() + timedelta(minutes=15)
+
         # Параметры платежа, сумма - обязательный параметр
         # Остальные параметры можно не задавать
         payment_data = {
@@ -29,6 +33,7 @@ class PaykeeperPaymentApi(metaclass=SingletonMeta):
             "client_email": payment.email,
             "client_phone": str(payment.phone),
             "service_name": "Услуга",
+            "expiry": expiry_datetime.strftime("%Y-%m-%d %H:%M:%S"),
         }
 
         # Запрос на получение токена безопасности
@@ -63,4 +68,37 @@ class PaykeeperPaymentApi(metaclass=SingletonMeta):
 
         # Прямая ссылка на оплату
         payment_url = f"{self._server_url}/bill/{invoice_id}/"
-        return {"payment_url": payment_url}
+        return {
+            "invoice_id": invoice_id,
+            "expiry_datetime": expiry_datetime,
+            "payment_url": payment_url,
+        }
+
+    def get_payment_status(self, payment):
+        base64_auth = base64.b64encode(
+            f"{self._user}:{self._password}".encode()
+        ).decode()
+
+        # Заголовки для запроса
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": f"Basic {base64_auth}",
+        }
+
+        # Готовим запрос 3.1 JSON API на получение счёта
+        uri = f"/info/invoice/byid/?id={payment.invoice_id}"
+        url = f"{self._server_url}{uri}"
+
+        # Выполняем запрос
+        response = requests.get(url, headers=headers)
+
+        # Проверяем статус ответа
+        if response.status_code == 200:
+            data = response.json()
+            status = data.get("status")
+            if status:
+                print(f"Статус счёта: {status}")
+            else:
+                print("Ошибка: поле 'status' отсутствует в ответе.")
+        else:
+            print(f"Ошибка: {response.status_code}, {response.text}")

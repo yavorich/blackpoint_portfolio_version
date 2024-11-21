@@ -1,4 +1,10 @@
-from rest_framework.serializers import Serializer, CharField, DateTimeField, UUIDField
+from rest_framework.serializers import (
+    Serializer,
+    CharField,
+    DateTimeField,
+    UUIDField,
+    URLField,
+)
 
 
 class PaymentWebhookSerializer(Serializer):
@@ -8,3 +14,9 @@ class PaymentWebhookSerializer(Serializer):
 
     def validate(self, attrs):
         return super().validate(attrs)
+
+
+class PaymentResponseSerializer(Serializer):
+    invoice_id = CharField()
+    payment_url = URLField()
+    expiry_datetime = DateTimeField()
