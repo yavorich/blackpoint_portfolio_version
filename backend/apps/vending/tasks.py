@@ -18,7 +18,7 @@ def set_all_terminal_addresses():
         response = requests.get(url)
         if not response.status_code == 200:
             return f"Не удалось получить адрес: status={response.status_code}"
-        address_components = response["response"]["GeoObjectCollection"][
+        address_components = response.json()["response"]["GeoObjectCollection"][
             "featureMember"
         ][0]["GeoObject"]["metaDataProperty"]["GeocoderMetaData"]["Address"][
             "Components"
