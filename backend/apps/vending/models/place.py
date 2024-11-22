@@ -7,6 +7,8 @@ from django.db.models import (
     ForeignKey,
     SET_NULL,
     ImageField,
+    FloatField,
+    PositiveIntegerField,
 )
 from io import BytesIO
 from qrcode import QRCode
@@ -22,16 +24,18 @@ from .drink import DrinkVolume
 
 class Place(Model):
     is_active = BooleanField("Активен", default=True)
-    name = CharField("Название", max_length=50, blank=True, null=True)
+    terminal_id = PositiveIntegerField("ID терминала", **blank_and_null)
+    name = CharField("Название", max_length=50, **blank_and_null)
     city = ForeignKey(
         City,
         related_name="places",
         verbose_name="Город",
-        blank=True,
-        null=True,
         on_delete=SET_NULL,
+        **blank_and_null,
     )
-    address = CharField("Адрес автомата", max_length=255)
+    address = CharField("Адрес автомата", max_length=255, **blank_and_null)
+    latitude = FloatField("Широта", **blank_and_null)
+    longitude = FloatField("Долгота", **blank_and_null)
     partner = ForeignKey(
         Partner,
         related_name="places",
@@ -44,8 +48,7 @@ class Place(Model):
     )
     qr_code = ImageField(
         upload_to=get_upload_path(catalog="places", name_field="pk", field="qr_code"),
-        blank=True,
-        null=True,
+        **blank_and_null,
     )
     # point = PointField("Координаты", geography=True, srid=4326)
 
@@ -55,7 +58,7 @@ class Place(Model):
         ordering = ["address"]
 
     def __str__(self):
-        return self.address
+        return self.address or "Неизвестно"
 
     def generate_qr_code(self):
         # Содержимое QR-кода — только ID места
