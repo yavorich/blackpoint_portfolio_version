@@ -14,6 +14,7 @@ from apps.vending.serializers import (
     DrinkVolumeSerializer,
     DrinkBuySerializer,
 )
+from apps.vending.tasks import add_credits_to_terminal
 
 from core.pagination import PageNumberSetPagination
 
@@ -73,6 +74,6 @@ class PlaceViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         subscription.today_cups -= 1
         subscription.save()
 
-        # TODO: add credits
+        add_credits_to_terminal.delay(place, serializer.validated_data["drink"].price)
 
         return Response(serializer.data, status=201)
