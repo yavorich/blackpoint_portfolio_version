@@ -16,7 +16,7 @@ class PlaceSerializer(ModelSerializer):
 
     class Meta:
         model = Place
-        fields = ["id", "address", "subscription"]
+        fields = ["id", "address", "latitude", "longitude", "subscription"]
 
     def get_subscription(self, obj):
         user = self.context.get("request").user
