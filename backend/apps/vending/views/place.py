@@ -74,6 +74,8 @@ class PlaceViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
         subscription.today_cups -= 1
         subscription.save()
 
-        add_credits_to_terminal.delay(place, serializer.validated_data["drink"].price)
+        add_credits_to_terminal.delay(
+            place.terminal_id, serializer.validated_data["drink"].price
+        )
 
         return Response(serializer.data, status=201)
