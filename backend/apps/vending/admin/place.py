@@ -41,9 +41,12 @@ class PlaceAdmin(UnfoldModelAdmin):
     list_display = ["name", "partner", "city", "address", "is_active"]
     fields = (
         "name",
+        "terminal_id",
         "partner",
         "city",
         "address",
+        "latitude",
+        "longitude",
         "drinks",
         "qr_code_image",
         "is_active",

@@ -2,14 +2,14 @@ import base64
 import requests
 
 from django.utils.timezone import localtime, timedelta
-from config.settings import PAYKEEPER_USER, PAYKEEPER_PASSWORD
+from config.settings import PAYKEEPER_USER, PAYKEEPER_PASSWORD, PAYKEEPER_URL
 from core.singleton import SingletonMeta
 
 
 class PaykeeperPaymentApi(metaclass=SingletonMeta):
     _user = PAYKEEPER_USER
     _password = PAYKEEPER_PASSWORD
-    _server_url = "https://tochka-chernogo.server.paykeeper.ru"
+    _server_url = PAYKEEPER_URL
 
     def init_payment(self, payment):
         # Basic-авторизация передаётся как base64
