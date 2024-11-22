@@ -13,7 +13,7 @@ def add_credits_to_terminal(terminal_id, num_credits):
     token = get_auth_token()
     url = VENDISTA_API_URL + f"/terminals/{terminal_id}/commands"
     params = {"token": token}
-    data = {"command_id": 20, "parameter1": num_credits}
+    data = {"command_id": 20, "parameter1": num_credits * 100}
 
     request = PreparedRequest()
     request.prepare_url(url, params)
