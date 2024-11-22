@@ -9,9 +9,9 @@ from apps.vending.models import Partner, Place
 
 
 @shared_task
-def add_credits_to_terminal(place, num_credits):
+def add_credits_to_terminal(terminal_id, num_credits):
     token = get_auth_token()
-    url = VENDISTA_API_URL + f"/terminal/{place.terminal_id}/commands"
+    url = VENDISTA_API_URL + f"/terminal/{terminal_id}/commands"
     params = {"token": token}
     data = {"command_id": 20, "parameter1": num_credits}
 
