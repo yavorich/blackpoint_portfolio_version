@@ -25,6 +25,13 @@ from .drink import DrinkVolume
 class Place(Model):
     is_active = BooleanField("Активен", default=True)
     terminal_id = PositiveIntegerField("ID терминала", **blank_and_null)
+    vendista_account = ForeignKey(
+        "vending.VendistaAccount",
+        related_name="terminals",
+        verbose_name="Аккаунт Vendista",
+        on_delete=SET_NULL,
+        **blank_and_null,
+    )
     name = CharField("Название", max_length=50, **blank_and_null)
     city = ForeignKey(
         City,
@@ -50,7 +57,6 @@ class Place(Model):
         upload_to=get_upload_path(catalog="places", name_field="pk", field="qr_code"),
         **blank_and_null,
     )
-    # point = PointField("Координаты", geography=True, srid=4326)
 
     class Meta:
         verbose_name = "автомат"
