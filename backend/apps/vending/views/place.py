@@ -14,7 +14,6 @@ from apps.vending.serializers import (
     DrinkVolumeSerializer,
     DrinkBuySerializer,
 )
-from apps.vending.tasks import add_credits_to_terminal
 
 from core.pagination import PageNumberSetPagination
 
@@ -69,13 +68,19 @@ class PlaceViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
             data=request.data, context={"place": place, "request": request}
         )
         serializer.is_valid(raise_exception=True)
+
+        # если есть привязка к аккаунту Vendista, начисляем кредиты
+        vendista_account = place.vendista_account
+        if vendista_account:
+            success = vendista_account.send_credits_to_terminal(
+                place.terminal_id, serializer.validated_data["drink"].price
+            )
+            if not success:
+                return Response("Ошибка начисления кредитов", status=503)
+
         serializer.save()
 
         subscription.today_cups -= 1
         subscription.save()
-
-        add_credits_to_terminal.delay(
-            place.terminal_id, serializer.validated_data["drink"].price
-        )
 
         return Response(serializer.data, status=201)
