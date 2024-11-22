@@ -11,7 +11,7 @@ from apps.vending.models import Partner, Place
 @shared_task
 def add_credits_to_terminal(terminal_id, num_credits):
     token = get_auth_token()
-    url = VENDISTA_API_URL + f"/terminal/{terminal_id}/commands"
+    url = VENDISTA_API_URL + f"/terminals/{terminal_id}/commands"
     params = {"token": token}
     data = {"command_id": 20, "parameter1": num_credits}
 
@@ -19,7 +19,7 @@ def add_credits_to_terminal(terminal_id, num_credits):
     request.prepare_url(url, params)
 
     session = Session()
-    response = session.post(request.url, data=data)
+    response = session.post(request.url, json=data)
     response_data = response.json()
     if response.status_code == 200:
         return "Success"
