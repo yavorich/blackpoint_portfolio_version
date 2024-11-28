@@ -1,4 +1,11 @@
-from django.db.models import Model, ForeignKey, TextField, DateTimeField, CASCADE, BooleanField
+from django.db.models import (
+    Model,
+    ForeignKey,
+    TextField,
+    DateTimeField,
+    CASCADE,
+    BooleanField,
+)
 from apps.account.models import User
 
 
