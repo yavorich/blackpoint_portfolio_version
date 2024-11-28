@@ -13,6 +13,7 @@ from django.db.models import (
     CharField,
     EmailField,
     DateTimeField,
+    BooleanField,
 )
 from django.utils.timezone import localdate
 from phonenumber_field.modelfields import PhoneNumberField
@@ -110,6 +111,7 @@ class SubscriptionPayment(Model):
     payment_url = URLField("URL для оплаты", blank=True, null=True)
     payment_date = DateField("Дата платежа", blank=True, null=True)
     status = CharField("Статус", choices=Status.choices)
+    opt_in_consent = BooleanField("Согласие на рассылку", default=False)
 
     class Meta:
         verbose_name = "платёж"
