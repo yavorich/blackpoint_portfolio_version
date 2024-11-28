@@ -20,11 +20,13 @@ class SubscriptionPaymentAdmin(UnfoldModelAdmin):
         "status",
         "payment_date",
         "price",
-        "user",
-        "email",
         "tariff",
         "address",
         "partner_name",
+        "user",
+        "phone",
+        "email",
+        "opt_in_consent",
     ]
     list_filter = (
         ("user__username", AllValuesFieldListDropdownFilter),
@@ -47,7 +49,7 @@ class SubscriptionPaymentAdmin(UnfoldModelAdmin):
 
 class SubscriptionPaymentInline(UnfoldNestedTabularInline):
     model = SubscriptionPayment
-    fields = ["payment_date", "price"]
+    fields = ["payment_date", "price", "phone", "email", "opt_in_consent"]
     readonly_fields = fields
     extra = 0
 
