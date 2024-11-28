@@ -6,4 +6,5 @@ from apps.support.models import SupportRequest
 
 @admin.register(SupportRequest)
 class SupportRequestAdmin(UnfoldModelAdmin):
-    list_display = ["id", "user", "message"]
+    list_display = ["id", "user", "message", "viewed"]
+    list_editable = ["viewed"]
