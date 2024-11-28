@@ -52,6 +52,7 @@ THIRD_PARTY_APPS = [
 
 INSTALLED_APPS = (
     [
+        "admin_reorder",
         "unfold",
         "unfold.contrib.filters",
         "unfold.contrib.forms",
@@ -82,6 +83,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "config.middleware.CustomModelAdminReorder",
 ]
 
 AUTH_USER_MODEL = "account.User"
@@ -283,3 +285,10 @@ PAYKEEPER_URL = environ.get("PAYKEEPER_URL")
 VENDISTA_API_URL = environ.get("VENDISTA_API_URL")
 
 YANDEX_GEOCODER_API_KEY = environ.get("YANDEX_GEOCODER_API_KEY")
+
+ADMIN_REORDER = (
+    "vending",
+    "account",
+    "support",
+    "django_celery_beat",
+)
