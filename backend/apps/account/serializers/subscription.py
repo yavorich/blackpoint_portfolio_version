@@ -3,6 +3,7 @@ from rest_framework.serializers import (
     Serializer,
     IntegerField,
     EmailField,
+    BooleanField,
 )
 from rest_framework.exceptions import ValidationError
 from apps.account.models import UserSubscription
@@ -29,6 +30,7 @@ class BuySubscriptionSerializer(Serializer):
     tariff_id = IntegerField()
     phone = PhoneNumberField(required=False)
     email = EmailField(required=False)
+    opt_in_consent = BooleanField()
 
     def validate(self, attrs):
         try:
