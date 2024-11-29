@@ -98,6 +98,13 @@ class SubscriptionPayment(Model):
         null=True,
         on_delete=SET_NULL,
     )
+    partner = ForeignKey(
+        "vending.Partner",
+        related_name="payments",
+        verbose_name="Партнёр",
+        null=True,
+        on_delete=SET_NULL,
+    )
     tariff = ForeignKey(
         SubscriptionTariff,
         related_name="payments",
@@ -110,7 +117,7 @@ class SubscriptionPayment(Model):
     expiry_datetime = DateTimeField("Оплатить до", blank=True, null=True)
     payment_url = URLField("URL для оплаты", blank=True, null=True)
     payment_date = DateField("Дата платежа", blank=True, null=True)
-    status = CharField("Статус", choices=Status.choices)
+    status = CharField("Статус", choices=Status.choices, default=Status.PENDING)
     opt_in_consent = BooleanField("Согласие на рассылку", default=False)
 
     class Meta:

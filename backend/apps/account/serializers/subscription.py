@@ -67,4 +67,6 @@ class BuySubscriptionSerializer(Serializer):
                 )
         attrs["email"] = email
 
+        attrs["partner"] = attrs["place"].partner
+
         return attrs
