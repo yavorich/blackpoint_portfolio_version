@@ -1,0 +1,11 @@
+.inline-group .tabular tr.has_original td {
+    padding-top: 8px;
+}
+
+.original {
+    display: none;
+}
+
+.timezonewarning {
+    display: none;
+}

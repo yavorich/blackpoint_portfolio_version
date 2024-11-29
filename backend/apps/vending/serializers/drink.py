@@ -32,6 +32,8 @@ class DrinkBuySerializer(ModelSerializer):
     def create(self, validated_data):
         validated_data["user"] = self.context.get("request").user
         validated_data["place"] = self.context.get("place")
+        validated_data["partner"] = validated_data["place"].partner
+        validated_data["price"] = validated_data["drink"].price
         return super().create(validated_data)
 
 
