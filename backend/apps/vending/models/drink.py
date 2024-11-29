@@ -7,6 +7,7 @@ from django.db.models import (
     DateTimeField,
 )
 from apps.account.models import User
+from core.builted.blank_and_null import blank_and_null
 
 
 class DrinkType(Model):
@@ -41,21 +42,35 @@ class DrinkVolume(Model):
 
 class DrinkHistory(Model):
     drink = ForeignKey(
-        DrinkVolume, related_name="history", verbose_name="Напиток", on_delete=CASCADE
+        DrinkVolume,
+        related_name="history",
+        verbose_name="Напиток",
+        on_delete=CASCADE,
+        **blank_and_null,
     )
     place = ForeignKey(
         "vending.Place",
         related_name="drink_history",
         verbose_name="Автомат",
         on_delete=CASCADE,
+        **blank_and_null,
+    )
+    partner = ForeignKey(
+        "vending.Partner",
+        related_name="drink_history",
+        verbose_name="Партнёр",
+        on_delete=CASCADE,
+        **blank_and_null,
     )
     user = ForeignKey(
         User,
         related_name="drink_history",
         verbose_name="Пользователь",
         on_delete=CASCADE,
+        **blank_and_null,
     )
     purchased_at = DateTimeField("Дата покупки", auto_now_add=True)
+    price = PositiveIntegerField("Стоимость", **blank_and_null)
 
     class Meta:
         verbose_name = "заказ"
