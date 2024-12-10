@@ -58,25 +58,25 @@ class UserSubscriptionInline(UnfoldNestedStackedInline):
     model = UserSubscription
     inlines = [SubscriptionPaymentInline]
     fields = [
-        "tariff_name",
+        "tariff",
         "start_date",
         "expire_date",
-        "place_address",
+        "place",
         "today_cups",
     ]
-    readonly_fields = [
-        "tariff_name",
-        "place_address",
-    ]
+    # readonly_fields = [
+    #     "tariff_name",
+    #     "place_address",
+    # ]
     extra = 0
 
-    @admin.display(description="Название")
-    def tariff_name(self, obj):
-        return obj.tariff.name
+    # @admin.display(description="Название")
+    # def tariff_name(self, obj):
+    #     return obj.tariff.name
 
-    @admin.display(description="Адрес автомата")
-    def place_address(self, obj):
-        return obj.place.address
+    # @admin.display(description="Адрес автомата")
+    # def place_address(self, obj):
+    #     return obj.place.address
 
 
 class UserDrinkHistoryInline(UnfoldNestedStackedInline):
