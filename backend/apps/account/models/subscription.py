@@ -45,7 +45,6 @@ class UserSubscription(Model):
         SubscriptionTariff,
         related_name="user_subscriptions",
         verbose_name="Тариф",
-        blank=True,
         null=True,
         on_delete=CASCADE,
     )
