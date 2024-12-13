@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, PrimaryKeyRelatedField
 from rest_framework.exceptions import ValidationError
 from apps.vending.models import DrinkType, DrinkVolume, DrinkHistory
 
@@ -17,9 +17,11 @@ class DrinkTypeSerializer(ModelSerializer):
 
 
 class DrinkBuySerializer(ModelSerializer):
+    volume = PrimaryKeyRelatedField(source="drink", queryset=DrinkVolume.objects.all())
+
     class Meta:
         model = DrinkHistory
-        fields = ["drink"]
+        fields = ["volume"]
 
     def validate(self, attrs):
         place = self.context.get("place")
