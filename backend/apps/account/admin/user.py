@@ -81,7 +81,7 @@ class UserSubscriptionInline(UnfoldNestedStackedInline):
 
 class UserDrinkHistoryInline(UnfoldNestedStackedInline):
     model = DrinkHistory
-    fields = ["place", "drink", "purchased_at"]
+    fields = ["place", "drink_name", "price", "purchased_at"]
     readonly_fields = fields
     extra = 0
 

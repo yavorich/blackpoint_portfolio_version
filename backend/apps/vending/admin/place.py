@@ -1,43 +1,34 @@
 from django.contrib import admin
-from django.forms import ModelForm, ModelMultipleChoiceField, CheckboxSelectMultiple
 from django.utils.safestring import mark_safe
-from unfold.admin import StackedInline
 
-from core.unfold.admin import UnfoldModelAdmin
+from core.unfold_nested.admin import UnfoldNestedStackedInline, UnfoldNestedAdmin
 from core.unfold.filters import AllValuesFieldListDropdownFilter
 
-from apps.vending.models import Place, DrinkVolume, DrinkHistory
+from apps.vending.models import Place, DrinkVolume, DrinkHistory, DrinkType
 
 
-class PlaceDrinkHistoryInline(StackedInline):
+class PlaceDrinkHistoryInline(UnfoldNestedStackedInline):
     model = DrinkHistory
-    fields = ["drink", "user", "purchased_at"]
+    fields = ["drink_name", "price", "user", "purchased_at"]
     readonly_fields = fields
     extra = 0
 
 
-class PlaceModelForm(ModelForm):
-    drinks = ModelMultipleChoiceField(
-        queryset=DrinkVolume.objects.all(),
-        widget=CheckboxSelectMultiple,
-        required=False,
-        label="Меню",
-    )
+class PlaceDrinkVolumeInline(UnfoldNestedStackedInline):
+    model = DrinkVolume
+    fields = ["volume_ml", "price"]
+    extra = 0
 
-    class Meta:
-        model = Place
-        fields = ["name", "partner", "city", "address", "drinks", "is_active"]
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        # Предустанавливаем все напитки по умолчанию
-        if not self.instance.pk:  # Только для новых объектов
-            self.fields["drinks"].initial = DrinkVolume.objects.all()
+class PlaceDrinkMenuInline(UnfoldNestedStackedInline):
+    model = DrinkType
+    inlines = [PlaceDrinkVolumeInline]
+    fields = ["name"]
+    extra = 0
 
 
 @admin.register(Place)
-class PlaceAdmin(UnfoldModelAdmin):
-    form = PlaceModelForm
+class PlaceAdmin(UnfoldNestedAdmin):
     list_display = ["name", "partner", "city", "address", "is_active"]
     fields = (
         "name",
@@ -47,7 +38,6 @@ class PlaceAdmin(UnfoldModelAdmin):
         "address",
         "latitude",
         "longitude",
-        "drinks",
         "qr_code_image",
         "is_active",
     )
@@ -56,7 +46,7 @@ class PlaceAdmin(UnfoldModelAdmin):
         ("city__name", AllValuesFieldListDropdownFilter),
         ("partner__name", AllValuesFieldListDropdownFilter),
     )
-    inlines = [PlaceDrinkHistoryInline]
+    inlines = [PlaceDrinkMenuInline, PlaceDrinkHistoryInline]
 
     @admin.display(description="QR-код")
     def qr_code_image(self, obj: Place):

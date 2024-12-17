@@ -1,4 +1,5 @@
 from django.utils.timezone import localdate
+from django.shortcuts import get_object_or_404
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin
 from rest_framework.permissions import IsAuthenticated
@@ -29,9 +30,7 @@ class PlaceViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     @action(methods=["get"], detail=True, url_path="drinks")
     def drinks(self, request, pk=None):
         place = self.get_object()
-        drink_types = DrinkType.objects.filter(
-            volumes__in=place.drinks.all()
-        ).distinct()
+        drink_types = place.drinks.all()
         serializer = DrinkTypeSerializer(drink_types, many=True)
         return Response(serializer.data)
 
@@ -43,7 +42,10 @@ class PlaceViewSet(ListModelMixin, RetrieveModelMixin, GenericViewSet):
     def drink_volumes(self, request, pk=None, drink_type_id=None):
         """Список DrinkVolume для выбранного DrinkType"""
         place = self.get_object()
-        volumes = place.drinks.filter(drink_type_id=drink_type_id)
+        drink_type = get_object_or_404(
+            DrinkType, place=place, id=drink_type_id
+        )
+        volumes = drink_type.volumes.all()
         serializer = DrinkVolumeSerializer(volumes, many=True)
         return Response(serializer.data)
 

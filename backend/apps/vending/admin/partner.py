@@ -1,9 +1,6 @@
 from django.contrib import admin
-from django.forms import ModelForm, DateField, DateInput, BaseInlineFormSet
+from django.forms import BaseInlineFormSet
 from django.db.models import Sum
-from django.utils.safestring import mark_safe
-from django.template.loader import render_to_string
-from django.http import JsonResponse
 from django.utils.timezone import now, timedelta
 
 from core.unfold.admin import UnfoldModelAdmin
@@ -40,7 +37,7 @@ class DrinkHistoryFormSet(TotalStatisticFormSet):
         return {
             "place": None,
             "user": None,
-            "drink": None,
+            "drink_name": None,
             "price": queryset.aggregate(total=Sum("price"))["total"] or 0,
             "purchased_at": None,
         }
@@ -63,7 +60,7 @@ class PartnerDrinkHistoryInline(TotalStatisticInlineMixin, TabularInline):
     formset = DrinkHistoryFormSet
     can_delete = False
     max_num = 0
-    fields = ["place", "user", "drink", "get_purchased_at", "price"]
+    fields = ["place", "user", "drink_name", "get_purchased_at", "price"]
     readonly_fields = fields
     extra = 0
 
@@ -165,57 +162,3 @@ class PartnerAdmin(UnfoldModelAdmin):
         queryset = super().get_queryset(request)
         # Фильтрация будет происходить на уровне inlines, а не основного списка.
         return queryset
-
-    # def change_view(self, request, object_id, form_url="", extra_context=None):
-    #     extra_context = extra_context or {}
-
-    #     # Получаем параметры фильтрации
-    #     filter_type = request.GET.get("filter_type", "total")  # по умолчанию — "всего"
-    #     date_from = request.GET.get("date_from")
-    #     date_to = request.GET.get("date_to")
-
-    #     # Начальные и конечные даты
-    #     today = now().date()
-    #     date_filters = {
-    #         "week": today - timedelta(days=7),
-    #         "month": today - timedelta(days=30),
-    #         "3_months": today - timedelta(days=90),
-    #         "total": None,  # Нет ограничений
-    #     }
-
-    #     # Определяем фильтрацию по времени
-    #     if filter_type in date_filters:
-    #         if filter_type == "total":
-    #             payments = SubscriptionPayment.objects.filter(
-    #                 partner_id=object_id, status="success"
-    #             )
-    #         else:
-    #             payments = SubscriptionPayment.objects.filter(
-    #                 partner_id=object_id,
-    #                 status="success",
-    #                 payment_date__gte=date_filters[filter_type],
-    #                 payment_date__lte=today,
-    #             )
-    #     elif date_from and date_to:
-    #         payments = SubscriptionPayment.objects.filter(
-    #             partner_id=object_id,
-    #             status="success",
-    #             payment_date__gte=date_from,
-    #             payment_date__lte=date_to,
-    #         )
-    #     else:
-    #         payments = SubscriptionPayment.objects.filter(
-    #             partner_id=object_id, status=SubscriptionPayment.Status.SUCCESS
-    #         )
-
-    #     # Подсчёт общей суммы
-    #     total_sum = payments.aggregate(total=Sum("price"))["total"] or 0
-
-    #     # Добавляем в контекст
-    #     extra_context["payments"] = payments
-    #     extra_context["total_sum"] = total_sum
-    #     extra_context["filter_type"] = filter_type
-    #     extra_context["date_from"] = date_from
-    #     extra_context["date_to"] = date_to
-
-    #     return super().change_view(request, object_id, form_url, extra_context)
