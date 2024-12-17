@@ -17,7 +17,9 @@ class DrinkTypeSerializer(ModelSerializer):
 
 
 class DrinkBuySerializer(ModelSerializer):
-    volume = PrimaryKeyRelatedField(source="drink", queryset=DrinkVolume.objects.all())
+    volume = PrimaryKeyRelatedField(
+        source="drink", queryset=DrinkVolume.objects.all(), write_only=True
+    )
 
     class Meta:
         model = DrinkHistory
@@ -25,17 +27,20 @@ class DrinkBuySerializer(ModelSerializer):
 
     def validate(self, attrs):
         place = self.context.get("place")
-        if not attrs["drink"] in place.drinks.all():
+        if not attrs["drink"] in DrinkVolume.objects.filter(drink_type__place=place):
             raise ValidationError(
                 "Данная позиция не входит в меню автомата. Выберите другую позицию"
             )
         return attrs
 
     def create(self, validated_data):
+        place = self.context.get("place")
+        drink = validated_data.pop("drink")
         validated_data["user"] = self.context.get("request").user
-        validated_data["place"] = self.context.get("place")
-        validated_data["partner"] = validated_data["place"].partner
-        validated_data["price"] = validated_data["drink"].price
+        validated_data["place"] = place
+        validated_data["partner"] = place.partner
+        validated_data["price"] = drink.price
+        validated_data["drink_name"] = drink.name
         return super().create(validated_data)
 
 

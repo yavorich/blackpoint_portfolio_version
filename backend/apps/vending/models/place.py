@@ -2,7 +2,6 @@ from django.core.files import File
 from django.db.models import (
     Model,
     CharField,
-    ManyToManyField,
     BooleanField,
     ForeignKey,
     SET_NULL,
@@ -19,7 +18,6 @@ from core.utils.get_upload_path import get_upload_path
 
 from .city import City
 from .partner import Partner
-from .drink import DrinkVolume
 
 
 class Place(Model):
@@ -49,9 +47,6 @@ class Place(Model):
         verbose_name="Партнёр",
         on_delete=SET_NULL,
         **blank_and_null,
-    )
-    drinks = ManyToManyField(
-        DrinkVolume, related_name="places", verbose_name="Меню", blank=True
     )
     qr_code = ImageField(
         upload_to=get_upload_path(catalog="places", name_field="pk", field="qr_code"),
