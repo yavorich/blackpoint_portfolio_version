@@ -6,8 +6,9 @@ from django.db import migrations, models
 def set_drink_name(apps, schema_editor):
     DrinkHistory = apps.get_model("vending", "DrinkHistory")
     for obj in DrinkHistory.objects.all():
-        if obj.drink:
-            obj.drink_name = obj.drink.name
+        drink = obj.drink
+        if drink:
+            obj.drink_name = f"{drink.drink_type} - {drink.volume_ml} мл"
             obj.save()
 
 
