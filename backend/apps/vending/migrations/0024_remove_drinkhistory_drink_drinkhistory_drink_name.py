@@ -8,7 +8,7 @@ def set_drink_name(apps, schema_editor):
     for obj in DrinkHistory.objects.all():
         drink = obj.drink
         if drink:
-            obj.drink_name = f"{drink.drink_type} - {drink.volume_ml} мл"
+            obj.drink_name = f"{drink.drink_type.name} - {drink.volume_ml} мл"
             obj.save()
 
 
