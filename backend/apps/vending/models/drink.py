@@ -11,11 +11,18 @@ from core.builted.blank_and_null import blank_and_null
 
 
 class DrinkType(Model):
+    place = ForeignKey(
+        "vending.Place",
+        related_name="drinks",
+        verbose_name="Автомат",
+        on_delete=CASCADE,
+        **blank_and_null,
+    )
     name = CharField("Название напитка", max_length=100, unique=True)
 
     class Meta:
         verbose_name = "напиток"
-        verbose_name_plural = "Напитки"
+        verbose_name_plural = "Меню напитков"
 
     def __str__(self):
         return self.name
@@ -39,15 +46,12 @@ class DrinkVolume(Model):
     def __str__(self):
         return f"{self.drink_type} - {self.volume_ml} мл"
 
+    @property
+    def name(self):
+        return f"{self.drink_type} - {self.volume_ml} мл"
+
 
 class DrinkHistory(Model):
-    drink = ForeignKey(
-        DrinkVolume,
-        related_name="history",
-        verbose_name="Напиток",
-        on_delete=CASCADE,
-        **blank_and_null,
-    )
     place = ForeignKey(
         "vending.Place",
         related_name="drink_history",
@@ -71,17 +75,11 @@ class DrinkHistory(Model):
     )
     purchased_at = DateTimeField("Дата покупки", auto_now_add=True)
     price = PositiveIntegerField("Стоимость", **blank_and_null)
+    drink_name = CharField("Напиток", max_length=128, **blank_and_null)
 
     class Meta:
         verbose_name = "заказ"
         verbose_name_plural = "История заказов"
-
-    def __str__(self):
-        return str(self.drink)
-
-    @property
-    def drink_name(self):
-        return f"{self.drink.drink_type.name} {self.drink.volume_ml} мл"
 
     @property
     def place_address(self):
