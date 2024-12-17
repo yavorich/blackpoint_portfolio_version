@@ -18,7 +18,7 @@ class DrinkType(Model):
         on_delete=CASCADE,
         **blank_and_null,
     )
-    name = CharField("Название напитка", max_length=100, unique=True)
+    name = CharField("Название напитка", max_length=100)
 
     class Meta:
         verbose_name = "напиток"
