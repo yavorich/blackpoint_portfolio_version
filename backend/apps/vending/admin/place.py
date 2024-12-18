@@ -12,12 +12,14 @@ class PlaceDrinkHistoryInline(UnfoldNestedStackedInline):
     fields = ["drink_name", "price", "user", "purchased_at"]
     readonly_fields = fields
     extra = 0
+    classes = ["collapse"]
 
 
 class PlaceDrinkVolumeInline(UnfoldNestedStackedInline):
     model = DrinkVolume
     fields = ["volume_ml", "price"]
     extra = 0
+    classes = ["collapse"]
 
 
 class PlaceDrinkMenuInline(UnfoldNestedStackedInline):
@@ -25,6 +27,7 @@ class PlaceDrinkMenuInline(UnfoldNestedStackedInline):
     inlines = [PlaceDrinkVolumeInline]
     fields = ["name"]
     extra = 0
+    classes = ["collapse"]
 
 
 @admin.register(Place)
