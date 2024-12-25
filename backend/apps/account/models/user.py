@@ -56,14 +56,12 @@ class User(AbstractBaseUser):
     username = CharField(
         _("username"),
         max_length=150,
-        unique=True,
+        blank=True,
+        null=True,
         help_text=_(
             "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
         ),
         validators=[username_validator],
-        error_messages={
-            "unique": _("A user with that username already exists."),
-        },
     )
 
     is_staff = BooleanField(
@@ -97,7 +95,7 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-    USERNAME_FIELD = "username"
+    USERNAME_FIELD = "uuid"
 
     class Meta:
         verbose_name = "Пользователь"
