@@ -56,8 +56,7 @@ class User(AbstractBaseUser):
     username = CharField(
         _("username"),
         max_length=150,
-        blank=True,
-        null=True,
+        unique=True,
         help_text=_(
             "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
         ),
@@ -95,7 +94,7 @@ class User(AbstractBaseUser):
 
     objects = UserManager()
 
-    USERNAME_FIELD = "uuid"
+    USERNAME_FIELD = "username"
 
     class Meta:
         verbose_name = "Пользователь"
