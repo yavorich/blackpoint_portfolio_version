@@ -15,9 +15,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = await User.objects.filter(telegram_id=user_data.id).afirst()
 
     if not user:
-        username = user_data.username
-        if not username:
-            username = f"user_{generate_random_string()}"
+        username = user_data.username or f"user_{generate_random_string()}"
 
         user = await User.objects.acreate(
             telegram_id=user_data.id,
