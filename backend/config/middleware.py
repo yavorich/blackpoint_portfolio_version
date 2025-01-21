@@ -13,11 +13,9 @@ class CustomModelAdminReorder(ModelAdminReorder):
             # or app_list view, bail out!
             return response
 
-        try:
-            app_list = response.context_data["app_list"]
-        except KeyError:
-            # there is no app_list! nothing to reorder
-            app_list = response.context_data["available_apps"]
+        app_list = response.context_data.get("app_list") or response.context_data.get(
+            "available_apps", []
+        )
 
         self.init_config(request, app_list)
         ordered_app_list = self.get_app_list()
